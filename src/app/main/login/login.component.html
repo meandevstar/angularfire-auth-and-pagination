@@ -1,0 +1,64 @@
+<div class="container" [hidden]="!isApproved">
+  <div class="row">
+    <div class="col-sm-4 col-sm-offset-4 text-center">
+      <h1 class="login-header">Log In</h1>
+    </div>
+  </div>
+    
+  <div class="row">
+    <div class="col-md-4 col-ls-4 col-sm-4 col-sm-offset-4">
+      <div *ngIf="!(isAccountExists$ | async) || !(isEmailVerified$ | async)">
+        <h4>Enter your email here</h4>
+        <input autofocus type="text" class="form-control txt-login" placeholder="someone@domain.com" [(ngModel)]="email">
+        <div class="alert alert-success" *ngIf="(isAccountChecked$ | async) && (isAccountExists$ | async) && !(isEmailVerified | async)">
+          We've sent you a verification email. Please kindly check your mailbox. Haven't recieved?  
+          <span class="btn-resend" (click)="resendVerificationEmail()">Resend</span>
+        </div>
+        <div class="alert alert-danger" *ngIf="(isAccountChecked$ | async) && !(isAccountExists$ | async) && !(isEmailVerified | async)">
+          Your account does not exist.
+        </div>
+        <div class="alert alert-danger" *ngIf="!isEmailValid">
+          Please provide a valid email.
+        </div>
+        <button class="btn btn-default full-width" [disabled]="(checkConfigSent$ | async)" (click)="checkAccount()">
+          <span class="glyphicon glyphicon-ok" *ngIf="!(checkConfigSent$ | async)"></span>
+          <span class="glyphicon glyphicon-refresh glyphicon-spin" *ngIf="(checkConfigSent$ | async)"></span>
+        </button>
+        <div class="signup-wrapper">Don't have an account? Sign up <a href="signup" class="btn-resend">here</a></div>
+      </div>
+      <div *ngIf="(isAccountExists$ | async) && (isEmailVerified$ | async)">
+        <div [hidden]="(codeRequestSuccess$ | async)">
+          <h4>Send verification code to</h4>
+          <input autofocus type="text" class="form-control txt-login" placeholder="+12223334444" [(ngModel)]="securedPhoneNumber" [disabled]="!checkEmpty(phoneNumber$ | async)" #txtPhoneNumber>
+          <div id="recaptcha-container"></div>
+          <div class="alert alert-danger" *ngIf="!isPhoneValid || (codeRequestFailed$ | async)">
+            Please provide a valid phone number.
+          </div>
+          <div class="alert alert-danger" *ngIf="!isGrecaptchaResolved">
+            Please confirm that you not robot. 
+          </div>
+          <button class="btn btn-default full-width" [disabled]="(codeRequestSent$ | async)" (click)="sendCodeRequest()">
+            <span class="glyphicon glyphicon-ok" *ngIf="!(codeRequestSent$ | async)"></span>
+            <span class="glyphicon glyphicon-refresh glyphicon-spin" *ngIf="(codeRequestSent$ | async)"></span>
+          </button>
+        </div>
+        <div [hidden]="!(codeRequestSuccess$ | async)">
+          <h4>Enter 6 digit code from your phone</h4>
+          <input autofocus type="text" class="form-control txt-login" #txtCode [(ngModel)]="code">
+          <div class="alert alert-danger" *ngIf="!(verifyRequestSuccess$ | async) && (verifyRequestFailed$ | async)">
+            Verification failed. Please try again. Haven't recieved code? 
+            <span class="btn-resend" (click)="retryVerificationCode()">Retry</span>
+          </div>
+          <div class="alert alert-danger" *ngIf="!isCodeValid">
+            Please enter 6 digit code. 
+          </div>
+          <button class="btn btn-default full-width" [disabled]="(verifyRequestSent$ | async)" (click)="verifyCodeRequest()">
+            <span class="glyphicon glyphicon-ok" *ngIf="!(verifyRequestSent$ | async)"></span>
+            <span class="glyphicon glyphicon-refresh glyphicon-spin" *ngIf="(verifyRequestSent$ | async)"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-info [title]="pendingTitle" [message]="pendingMessage" [hidden]="isApproved"></app-info>

@@ -1,0 +1,10 @@
+.user-table {
+    width: 800px;
+}
+.user-table-wrapper {
+    display: flex;
+    justify-content: center;
+}
+.ui-select-container {
+    position: absolute;
+}

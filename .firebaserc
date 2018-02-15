@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "production": "test-c3aa1",
+    "staging": "test-c3aa1"
+  }
+}

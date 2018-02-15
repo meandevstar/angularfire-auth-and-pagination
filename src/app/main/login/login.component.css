@@ -1,0 +1,18 @@
+#recaptcha-container {
+    margin-left: calc((100% - 304px) / 2);
+    margin-bottom: 30px;
+}
+.btn-resend {
+    color: rgb(0, 168, 218);
+    cursor: pointer;
+}
+.btn-resend:hover {
+    text-decoration: underline;
+}
+.btn .glyphicon {
+    font-size: 3rem;
+}
+.signup-wrapper {
+    text-align: center;
+    padding: 30px;
+}

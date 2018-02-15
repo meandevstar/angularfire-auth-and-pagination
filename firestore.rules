@@ -1,0 +1,36 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+
+      allow read: if getRole(request.auth.uid) == 'SUPER_ADMIN' || getRole(request.auth.uid) == 'ADMIN' || request.auth.uid == userId;
+      allow create: if getRole(request.auth.uid) == 'SUPER_ADMIN'
+      allow update: if isSignedIn() && (getRole(request.auth.uid) == 'SUPER_ADMIN' || ((getRole(request.auth.uid) == 'ADMIN' && getRole(userId) == 'USER') || request.auth.uid == userId) && request.resource.data.type == 'USER');
+      allow delete: if getRole(request.auth.uid) == 'SUPER_ADMIN'
+
+    }
+
+    match /tokens/{tokenId} {
+      allow read, write;
+    }
+    
+    match /tableInfo/{tableInfoId} {
+      allow read, write;
+    }
+
+    function getStatus(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.status;
+    }
+
+    function isOneOfRoles(array) {
+      return isSignedIn() && (getRole(request.auth.uid) in array);
+    }
+
+    function isSignedIn() {
+      return request.auth != null && getStatus(request.auth.uid) == 'APPROVED';
+    }
+
+    function getRole(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.type;
+    }
+  }
+}

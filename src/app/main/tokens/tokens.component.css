@@ -1,0 +1,21 @@
+.token-table-wrapper {
+    display: flex;
+    justify-content: center;
+}
+.token-table {
+    max-width: 800px;
+    width: 90%;
+}
+.txt-count {
+    float: right;
+}
+.progress {
+    position: relative;
+}
+.progress span {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}

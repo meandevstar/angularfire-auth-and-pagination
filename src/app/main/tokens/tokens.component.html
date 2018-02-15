@@ -1,0 +1,122 @@
+<div class="filter-wrapper">
+  <div class="filter-block">
+    <button type="button"
+            class="btn btn-primary"
+            (click)="toggleFilters()">
+            Show column filters
+    </button>
+  </div>
+</div>
+
+<div class="token-table-wrapper">
+  <ngx-datatable
+    #tokenTable
+    class="token-table bootstrap expandable"
+    [rows]="items"
+    [columnMode]="'flex'"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    [externalPaging]="true"
+    [count]="pageInfo.count"
+    [offset]="pageInfo.offset"
+    [limit]="pageInfo.limit"
+    (page)='setPage($event)'>
+    <ngx-datatable-column
+      [width]="50"
+      [sortable]="true"
+      [draggable]="false"
+      [canAutoResize]="false"
+      [flexGrow]="1">
+      <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+        <span
+          [class.datatable-icon-right]="!expanded"
+          [class.datatable-icon-down]="expanded"
+          class="desktop-hidden"
+          title="Expand/Collapse Row"
+          (click)="toggleExpandRow(row)">
+        </span>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Description" [flexGrow]="3">
+      <ng-template let-column="column" ngx-datatable-header-template>
+        <span class="txt-header mobile-hidden" [hidden]="isShowColumnFilters">{{ column.name }}</span>
+        <span class="txt-header mobile-hidden" [hidden]="!isShowColumnFilters">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Description"
+                   [(ngModel)]="descriptionFilter"
+                   (keyup)="updateFilter('description')"
+            />
+        </span>
+        <span class="glyphicon glyphicon-sort sort-btn-cus" (click)="sort('description')"></span> 
+      </ng-template>
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <span class="txt-info">{{ row.id}}</span>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <ngx-datatable-column name="Name" [flexGrow]="3">
+      <ng-template let-column="column" ngx-datatable-header-template>
+        <span class="txt-header mobile-hidden" [hidden]="isShowColumnFilters">{{ column.name }}</span>
+        <span class="txt-header mobile-hidden" [hidden]="!isShowColumnFilters">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Updated At"
+                   [(ngModel)]="updatedAtFilter"
+                   (keyup)="updateFilter('updatedAt')"
+            />
+        </span>
+        <span class="glyphicon glyphicon-sort sort-btn-cus" (click)="sort('updatedAt')"></span> 
+      </ng-template>
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <span class="mobile-hidden txt-info">{{ getDateString(row.updatedAt) }}</span>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- <ngx-datatable-column name="Updated At" [flexGrow]="3">
+      <ng-template let-column="column" ngx-datatable-header-template>
+        <span class="txt-header mobile-hidden" [hidden]="isShowColumnFilters">{{ column.name }}</span>
+        <span class="txt-header mobile-hidden" [hidden]="!isShowColumnFilters">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Updated At"
+                   [(ngModel)]="updatedAtFilter"
+                   (keyup)="updateFilter('updatedAt')"
+            />
+        </span>
+        <span class="glyphicon glyphicon-sort sort-btn-cus" (click)="sort('updatedAt')"></span> 
+      </ng-template>
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <span class="mobile-hidden txt-info">{{ getDateString(row.updatedAt) }}</span>
+      </ng-template>
+    </ngx-datatable-column> -->
+    <ngx-datatable-footer>
+      <ng-template 
+        ngx-datatable-footer-template 
+        let-rowCount="rowCount"
+        let-pageSize="pageSize"
+        let-selectedCount="selectedCount"
+        let-curPage="curPage"
+        let-offset="offset">
+        <div class="txt-page-count">
+          {{ pageInfo.count }} total
+        </div>
+        <div class="table-footer-overlay" [hidden]="!showPageSpinner">
+          <span class="glyphicon glyphicon-repeat gly-spin table-footer-spinner"></span>
+        </div>
+        <datatable-pager
+          [pagerLeftArrowIcon]="'datatable-icon-left'"
+          [pagerRightArrowIcon]="'datatable-icon-right'"
+          [pagerPreviousIcon]="'datatable-icon-prev'"
+          [pagerNextIcon]="'datatable-icon-skip'"
+          [page]="curPage"
+          [size]="pageSize"
+          [count]="rowCount"
+          [hidden]="pageInfo.count <= pageInfo.limit"
+          (change)="tokenTable.onFooterPage($event)">
+        </datatable-pager>
+      </ng-template>
+    </ngx-datatable-footer>
+  </ngx-datatable>
+</div>

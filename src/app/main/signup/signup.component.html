@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4 text-center">
+            <h1 class="login-header">Sign Up</h1>
+        </div>
+    </div>
+      
+    <div class="row">
+        <div class="col-md-4 col-ls-4 col-sm-4 col-sm-offset-4">
+            <div *ngIf="!(signUpSuccess$ | async)">
+                <h4>First Name</h4>
+                <input autoinput type="text" class="form-control txt-login" [(ngModel)]="firstName">
+                <h4>Last Name</h4>
+                <input autoinput type="text" class="form-control txt-login" [(ngModel)]="lastName">
+                <h4>Email</h4>
+                <input type="text" class="form-control txt-login" placeholder="someone@domain.com" [(ngModel)]="email">                
+                <div class="alert alert-danger" *ngIf="(isSignUpTried$ | async) && !(signUpRequestSent$ | async) && !(signUpSuccess$ | async)">
+                    Sign up failed. Please try again.
+                </div>
+                <div class="alert alert-danger" *ngIf="!isEmailValid">
+                    Email is not valid. Please enter valid email.
+                </div>
+                <div class="alert alert-danger" *ngIf="!isNameValid">
+                    Please input first name and last name.
+                </div>
+                <button class="btn btn-default full-width" *ngIf="!(signUpSuccess | async)" [disabled]="(signUpRequestSent$ | async)" (click)="signUpAttempt()">
+                    <span class="glyphicon glyphicon-ok" *ngIf="!(signUpRequestSent$ | async)"></span>
+                    <span class="glyphicon glyphicon-refresh glyphicon-spin" *ngIf="(signUpRequestSent$ | async)"></span>
+                </button>
+            </div>
+            <div class="alert alert-success" *ngIf="!(signUpRequestSent$ | async) && (signUpSuccess$ | async)">
+                You've created an account successfully. Please <a href="login" class="btn-login">sign in</a>.
+            </div>
+        </div>
+    </div>
+</div>
+        

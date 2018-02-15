@@ -1,0 +1,94 @@
+<div class="filter-wrapper">
+  <div class="filter-block">
+    <button type="button"
+            class="btn btn-primary"
+            (click)="toggleFilters()">
+            Show column filters
+    </button>
+  </div>
+</div>
+
+<div class="user-table-wrapper">
+    <ngx-datatable
+      class="user-table bootstrap"
+      [rows]="items"
+      [columns]="columns"
+      [columnMode]="'flex'"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [limit]="10">
+      <ngx-datatable-column name="Name" [flexGrow]="3">
+        <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template>
+          <span class="txt-header mobile-hidden" [hidden]="isShowColumnFilters">{{ column.name }}</span>
+          <span class="txt-header mobile-hidden" [hidden]="!isShowColumnFilters">
+              <input type="text"
+                      class="form-control"
+                      placeholder="Name"
+                      [(ngModel)]="nameFilter"
+                      (keyup)="updateFilter()"
+              />
+          </span>
+          <span class="glyphicon glyphicon-sort sort-btn-cus" (click)="sort()"></span> 
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <span class="mobile-hidden txt-info">{{ value }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Email" [flexGrow]="3">
+        <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template>
+          <span class="txt-header mobile-hidden" [hidden]="isShowColumnFilters">{{ column.name }}</span>
+          <span class="txt-header mobile-hidden" [hidden]="!isShowColumnFilters">
+              <input type="text"
+                      class="form-control"
+                      placeholder="Email"
+                      [(ngModel)]="emailFilter"
+                      (keyup)="updateFilter()"
+              />
+          </span>
+          <span class="glyphicon glyphicon-sort sort-btn-cus" (click)="sort()"></span> 
+        </ng-template>
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <span class="mobile-hidden txt-info">{{ value }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Type" [flexGrow]="2">
+        <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template>
+          <span class="txt-header mobile-hidden" [hidden]="isShowColumnFilters">{{ column.name }}</span>
+          <span class="txt-header mobile-hidden" [hidden]="!isShowColumnFilters">
+              <input type="text"
+                      class="form-control"
+                      placeholder="Type"
+                      [(ngModel)]="typeFilter"
+                      (keyup)="updateFilter()"
+              />
+          </span>
+          <span class="glyphicon glyphicon-sort sort-btn-cus" (click)="sort()"></span> 
+        </ng-template>
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <select class="txt-info" [(ngModel)]="row.type" *ngIf="isSuperAdmin() | async" (change)="updateUser(row)">
+            <option *ngFor="let t of userTypes"
+                    [value]="t.value">
+                    {{t.title}}
+            </option>
+          </select>
+          <span *ngIf="!(isSuperAdmin() | async)">{{ getString(row.type) }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Status" [flexGrow]="2">
+        <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template>
+          <span class="txt-header mobile-hidden">{{ column.name }}</span>
+          <span class="glyphicon glyphicon-sort sort-btn-cus" (click)="sort()"></span> 
+        </ng-template>
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <button type="button"
+                  class="btn btn-info"
+                  *ngIf="row.status === 'PENDING'"
+                  (click)="approveUser(row)">
+                  Approve
+          </button>
+          <span class="mobile-hidden txt-info" *ngIf="row.status === 'APPROVED'">Approved</span>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
