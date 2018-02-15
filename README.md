@@ -14,3 +14,5 @@ To change firebase environment, run `firebase use {enviroment_name}`
 To deploy project, run `firebase deploy`
 If you want to deploy only hosting, run `firebase deploy --only hosting`
 If you want to deploy only functions, run `firebase deploy --only functions`
+
+you can see [Demo here](https://test-c3aa1.firebaseapp.com)
